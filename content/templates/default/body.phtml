@@ -1,0 +1,28 @@
+	<div class="main base">
+		<div class="clearfix">
+			<section>
+				<h2>Blog</h2>
+				<?php if($postManager->havePosts()):?>
+					<?php while ($postManager->havePosts() > 0): ?>
+						<?php $post = $postManager->getNextPost();?>
+						<article class="clearfix">
+							<h3><?= $post['title']; ?></h3>
+							<p>Posted in: <?php /*$post['category'];*/ ?> on <?= $post['date']; ?></p>
+							<div>
+								<p><?= $post['content']; ?></p>
+								<p class="tags">Tags : <?php /*the_tags('');*/ ?></p>
+								<a href=<?= '"index.php?id='.$post['id'].'"'; ?>>Read More</a>
+								<a href=<?= '"index.php?id='.$post['id'].'"'; ?>><?='0'?></a>
+							<div>
+						</article>
+						<!--<?php/* comments_template(); */?>-->
+					<?php endwhile ?>
+					<?= $postManager->getPagedLinks();?>
+				<?php else:?>
+					<strong>Désole il n'y a pas d'article correspondant</strong>
+				<?php endif;?>
+
+			</section>
+
+		</div>
+	</div>
