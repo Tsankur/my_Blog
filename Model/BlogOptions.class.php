@@ -1,5 +1,5 @@
 <?php
-class BlogOptions
+class Model_BlogOptions
 {
 	private $options;
 	function __construct()

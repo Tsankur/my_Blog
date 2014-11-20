@@ -469,7 +469,7 @@ a
 }
 p, a
 {
-	font-size: 1.2em;
+	font-size: 1.2rem;
 }
 h1
 {
@@ -483,56 +483,98 @@ h3
 {
 	font-size: 2em;
 }
+body
+{
+	background-color: #9097A9;
+}
 /* header */
-header
+header.base
+{
+	background-color: white;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	padding: 10px;
+}
+header>div
 {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 }
-header>nav>ul
+header>div>p>a:hover
+{
+	text-decoration: underline;
+}
+header>div>h1
+{
+	margin: 0;
+}
+header>div>div
+{
+	align-items: center;
+	justify-content: flex-end;
+}
+header>div>div>nav>ul
 {
 	display: flex;
 	justify-content: flex-end;
 }
-header>nav>ul>li
-{
-	list-style: none;
-}
-header>nav>ul>li+li
+header>div>div>nav>ul>li+li
 {
 	margin-left: 10px;
 }
 /* main */
+div.main>div>section
+{
+	background-color: white;
+	padding: 10px;
+}
+div.main>div>section>article
+{
+	border: 1px #CED1DA solid;
+	background-color: #EEF0F5;
+	padding: 10px;
+}
+div.main>div>section>article+article
+{
+	margin-top: 10px;
+}
 div.main>div>section>article>h3+p
 {
 	font-size: 1.1em;
 	margin-top: 0.5em;
 }
-div.main>div>section>article>p
+div.main>div>section>article>div
+{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+div.main>div>section>article>div>div
+{
+	display: flex;
+	justify-content: flex-end;
+}
+div.main>div>section>article>div>p
 {
 	font-size: 1.2em;
 }
-div.main>div>section>article>p.tags
+div.main>div>section>article>div>p.tags
 {
 	font-size: 1.1em;
-	background-image: url(images/icon_tag.jpg);
-	background-repeat: no-repeat;
-	background-position: left center;
-	padding-left: 30px;
 	margin: 0;
 }
-div.main>div>section>article>p>a
+div.main>div>section>article>div>div>a
 {
 	color: #1B8BB4;
 	font-weight: bold;
 }
-div.main>div>section>article>p>a:hover
+div.main>div>section>article>div>a:hover
 {
 	text-decoration: underline;
 }
-div.main>div>section>article>a
+div.main>div>section>article>div>div>a
 {
 	background-color: #4EABD7;
 	font-size: 1.1em;
@@ -542,13 +584,13 @@ div.main>div>section>article>a
 	padding-left: 1em;
 	padding-right: 1em;
 }
-div.main>div>section>article>a:hover
+div.main>div>section>article>div>div>a:hover
 {
 	background-color: #11719F;
 }
-div.main>div>section>article>a+a
+div.main>div>section>article>div>div>a+a
 {
-	margin-right: 1em;
+	margin-left: 1em;
 }
 
 div.main>div>section>nav

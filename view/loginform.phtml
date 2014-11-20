@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr_FR">
+<head>
+	<meta charset="UTF-8">
+	<title>My Blog/Login</title>
+	<link rel="stylesheet" href="view/style.css">
+</head>
+<body>
+	<header class="base">
+		<h1>Login Panel</h1>
+	</header>
+	<div class="base main">
+		<form method="POST" action="login.php">
+			<?=$error?>
+			<fieldset>
+				<legend>Login infos</legend>
+				<div>
+					<label for="username">Username :</label>
+					<input type="text" name="username" placeholder="UserName"/>
+				</div>
+				<div>
+					<label for="password">Mot de passe :</label>
+					<input type="password" name="password" placeholder="Mot de passe"/>
+				</div>
+				<input type="hidden" name="referer" value="<?=$referer ?>"/>
+				<button id='envoyer'>Envoyer</button>
+			</fieldset>
+		</form>
+		<a href="<?=$referer ?>">Retour</a>
+	</div>
+</body>
+</html>

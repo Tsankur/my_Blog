@@ -7,11 +7,16 @@
 </head>
 <body>
 	<header class="base">
-		<h1><?= $options->get('blog_name') ?></h1>
-		<nav>
-			<ul>
-				<li><a href="index.php">Accueil</a></li>
-				<li><a href="admin.php">Admin</a></li>
-			</ul>
-		</nav>
+		<div>
+			<h1><?= $options->get('blog_name') ?></h1>
+			<div>
+				<?=$loginString; ?>
+				<nav>
+					<ul>
+						<li><a href="index.php">Accueil</a></li>
+						<li><a href="admin.php">Admin</a></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
 	</header>

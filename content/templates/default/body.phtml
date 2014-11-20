@@ -7,13 +7,15 @@
 						<?php $post = $postManager->getNextPost();?>
 						<article class="clearfix">
 							<h3><?= $post['title']; ?></h3>
-							<p>Posted in: <?php /*$post['category'];*/ ?> on <?= $post['date']; ?></p>
+							<p>Posted by <?= $post['pseudo'];?> in: <?php /*$post['category'];*/ ?> on <?= $post['date']; ?></p>
+							<p><?= $post['content']; ?></p>
 							<div>
-								<p><?= $post['content']; ?></p>
 								<p class="tags">Tags : <?php /*the_tags('');*/ ?></p>
-								<a href=<?= '"index.php?id='.$post['id'].'"'; ?>>Read More</a>
-								<a href=<?= '"index.php?id='.$post['id'].'"'; ?>><?='0'?></a>
-							<div>
+								<div>
+									<a href=<?= '"index.php?id='.$post['id'].'"'; ?>>Read More</a>
+									<a href=<?= '"index.php?id='.$post['id'].'"'; ?>><?='0'?></a>
+								</div>
+							</div>
 						</article>
 						<!--<?php/* comments_template(); */?>-->
 					<?php endwhile ?>

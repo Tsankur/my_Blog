@@ -19,12 +19,12 @@ class Model_PostManager
 	}
 	function loadPost($id)
 	{
-		$this->posts = $this->db->query('SELECT * FROM posts WHERE id = '.(int)$id);
+		$this->posts = $this->db->query('SELECT posts.*, users.pseudo FROM posts INNER JOIN users ON posts.user_id = users.user_id WHERE posts.id = ?',array($id));
 		$this->onePost = true;
 	}
 	function loadPage($id)
 	{
-		$this->posts = $this->db->query('SELECT * FROM posts ORDER BY id DESC LIMIT '.((int)$id*$this->postsPerPage).', '.$this->postsPerPage);
+		$this->posts = $this->db->query('SELECT posts.*, users.pseudo FROM posts INNER JOIN users ON posts.user_id = users.user_id ORDER BY posts.id DESC LIMIT '.((int)$id*$this->postsPerPage).', '.$this->postsPerPage);
 		$this->onePost = false;
 		$this->currentPage = $id;
 	}
@@ -34,7 +34,18 @@ class Model_PostManager
 	}
 	function getNextPost()
 	{
-		return array_shift($this->posts);
+		$post = array_shift($this->posts);
+		if(!$this->onePost)
+		{
+			$content = $post['content'];
+			if(strlen($content) > 500)
+			{
+				$content = substr($content, 0, 500);
+				$content .= ' ... <a href="index.php?id='.$post['id'].'">Read more.</a>';
+				$post['content'] = $content;
+			}
+		}
+		return $post;
 	}
 	function isOnePost()
 	{
@@ -62,7 +73,7 @@ class Model_PostManager
 				}
 				else
 				{
-					$linksString .= '<a href="index.php?page='.($i+1).'">'.$i.'</a>';
+					$linksString .= '<a href="index.php?page='.$i.'">'.($i+1).'</a>';
 				}
 			}
 			if($this->currentPage >= $this->pageCount - 1)
