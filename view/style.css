@@ -484,6 +484,14 @@ body
 {
 	background-color: #9097A9;
 }
+li
+{
+	list-style: none;
+}
+ul
+{
+	padding: 0;
+}
 /* header */
 header.base
 {
@@ -524,4 +532,83 @@ div.main
 	font-size: 1.6rem;
 	background-color: white;
 	padding: 10px;
+}
+div.main.flex
+{
+	display: flex;
+}
+div.main>aside
+{
+	background-color: #EEF0F5;
+	width: 20%;
+	padding: 10px;
+}
+div.main>aside>ul
+{
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+}
+div.main>aside>ul>li
+{
+	padding: 10px;
+	background-color: #4EABD7;
+	color: white;
+}
+div.main>aside>ul>li+li
+{
+	margin-top: 10px;
+}
+div.main>aside>ul>li:hover
+{
+	cursor: pointer;
+	background-color: #11719F;
+}
+div.main>div
+{
+	background-color: #EEF0F5;
+	padding: 10px;
+	margin-left: 10px;
+	width: 80%;
+}
+div.main>div>section
+{
+	display: none;
+}
+#Images>img
+{
+	width: 33%;
+	margin-right: 0.33%;
+	margin-bottom: 2px;
+}
+div.main>aside>ul>li.panelSelected
+{
+	background-color: #11719F;
+}
+.imageSelect
+{
+	display: flex;
+	align-items: center;
+}
+.imageSelect>img
+{
+	width: 19%;
+	line-height: 0;
+	margin-bottom: 5px;
+	margin-right: 1%;
+}
+div.main>div>section.show, .imageSelect
+{
+	display: flex;
+}
+#Images, .imageSelect
+{
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: flex-start;
+}
+.contentEdit
+{
+	display: flex;
+	flex-direction: column;
 }

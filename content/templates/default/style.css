@@ -536,6 +536,14 @@ div.main>div>section>article
 	background-color: #EEF0F5;
 	padding: 10px;
 }
+div.main>div>section>article>h3
+{
+	margin-top: 0;
+}
+div.main>div>section>article>h3>a
+{
+	font-size: 1em;
+}
 div.main>div>section>article+article
 {
 	margin-top: 10px;
@@ -595,13 +603,18 @@ div.main>div>section>article>div>div>a+a
 
 div.main>div>section>nav
 {
-	margin-top: 2em;
 	border: 1px #CED1DA solid;
 	background-color: #EEF0F5;
 	padding: 1em;
 	text-align: center;
 }
-div.main>div>section>nav>a, div.main>div>section>nav>span
+div.main>div>section>nav+article,
+div.main>div>section>article+nav
+{
+	margin-top: 10px;
+}
+div.main>div>section>nav>a,
+div.main>div>section>nav>span
 {
 	display: inline-block;
 	background-color: #4EABD7;

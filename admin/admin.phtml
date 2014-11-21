@@ -4,6 +4,42 @@
 	<meta charset="UTF-8">
 	<title>My Blog/Admin/Admin Panel</title>
 	<link rel="stylesheet" href='view/style.css'>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="ext/tinymce/tinymce.min.js"></script>
+	<script>
+		function ShowPanel(panelName)
+		{
+			$("div.main>div>section").removeClass("show");
+			$("aside>ul>li").removeClass("panelSelected");
+			$("#"+panelName).addClass("show");
+		}
+		$(function(){
+			$("aside>ul>li").on("click", function(e){
+				var panelName = $(this).html();
+				ShowPanel(panelName);
+				$(this).addClass("panelSelected");
+			});
+		});
+		tinymce.init({
+			selector:'#tinyMCE',
+			plugins: [
+					"advlist autolink autosave link image lists charmap preview hr anchor pagebreak",
+					"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime nonbreaking",
+					"table contextmenu directionality emoticons template textcolor paste fullpage textcolor colorpicker textpattern"
+			],
+
+			toolbar1: "newdocument | cut copy paste searchreplace | undo redo | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | link unlink anchor image code",
+			toolbar2: "bullist numlist | outdent indent blockquote | insertdatetime preview | forecolor backcolor | styleselect formatselect fontselect fontsizeselect",
+			toolbar3: "table | hr removeformat | subscript superscript | charmap emoticons | fullscreen | ltr rtl | visualchars visualblocks nonbreaking pagebreak restoredraft",
+
+			menubar: false,
+			toolbar_items_size: 'small',
+
+			min_height : 200,
+			max_height : 500,
+			height : 200
+		});
+	</script>
 </head>
 <body>
 	<header class="base">
@@ -12,8 +48,44 @@
 			<?=$loginString; ?>
 		</div>
 	</header>
-	<div class="main base">
-
+	<div class="main base flex">
+		<aside>
+			<ul>
+				<li class="panelSelected">Posts</li>
+				<li>Images</li>
+				<li>Users</li>
+			</ul>
+		</aside>
+		<div>
+			<section class="show" id="Posts">
+				<form action="sendPost">
+					<fieldset>
+						<legend>Contenu</legend>
+						<div>
+							<label for="title">Titre : </label>
+							<input type="text" name="title" value=<?= isset($post)?$post['title']:'' ?>>
+						</div>
+						<div>
+							<label for="content">Contenu : </label>
+							<textarea name="content" id="tinyMCE"><?= isset($post)?$post['content']:'' ?></textarea>
+						</div>
+					</fieldset>
+					<fieldset>
+						<legend>Image</legend>
+						<div class="imageSelect">
+							<?= $imagesString ?>
+						</div>
+					</fieldset>
+					<button type="submit">Envoyer</button>
+				</form>
+			</section>
+			<section id="Images">
+				<?= $imagesString ?>
+			</section>
+			<section id="Users">
+				
+			</section>
+		</div>
 	</div>
 </body>
 </html>

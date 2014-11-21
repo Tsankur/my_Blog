@@ -1,19 +1,27 @@
 	<div class="main base">
 		<div class="clearfix">
 			<section>
-				<h2>Blog</h2>
+				<h2><?= $postManager->isOnePost() ? 'Article' : 'Blog' ?></h2>
 				<?php if($postManager->havePosts()):?>
+					<?= $postManager->getPagedLinks();?>
 					<?php while ($postManager->havePosts() > 0): ?>
 						<?php $post = $postManager->getNextPost();?>
 						<article class="clearfix">
-							<h3><?= $post['title']; ?></h3>
+							<h3><?php if(!$postManager->isOnePost()): ?>
+								<a href=<?= '"index.php?id='.$post['id'].'"'; ?>>
+							<?php endif ?><?= $post['title']; ?>
+							<?php if(!$postManager->isOnePost()): ?>
+								</a>
+							<?php endif ?></h3>
 							<p>Posted by <?= $post['pseudo'];?> in: <?php /*$post['category'];*/ ?> on <?= $post['date']; ?></p>
 							<p><?= $post['content']; ?></p>
 							<div>
 								<p class="tags">Tags : <?php /*the_tags('');*/ ?></p>
 								<div>
+									<?php if(!$postManager->isOnePost()): ?>
 									<a href=<?= '"index.php?id='.$post['id'].'"'; ?>>Read More</a>
 									<a href=<?= '"index.php?id='.$post['id'].'"'; ?>><?='0'?></a>
+									<?php endif ?>
 								</div>
 							</div>
 						</article>

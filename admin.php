@@ -39,11 +39,22 @@ if(!isset($_SESSION['isAdmin']))
 }
 else
 {
-	$loginString = '<p>';
-	$loginString .= 'Admin ';
-	$loginString .= 'logged as '.$_SESSION['pseudo'].' |';
-	$loginString .= ' <a href="disconnect.php">Déconnexion</a>';
-	
-	$loginString .= '</p>';
+	$loginString = '<p>Admin logged as '.$_SESSION['pseudo'].' | <a href="disconnect.php">Déconnexion</a></p>';
+
+	$images = scandir('content/images/', 0);
+	$imagesString = '';
+	for ($i=2; $i < count($images); $i++)
+	{ 
+		$imagesString .= '<img src="content/images/'.$images[$i].'"/>';
+	}
+	if(isset($_GET['id']))
+	{
+		$options = new Model_BlogOptions();
+		$postsPerPage = (int)$options->get('posts_per_page');
+		$postManager = new Model_PostManager($postsPerPage);
+		$postManager->loadPost($_GET['id']);
+		$post = $postManager->getNextPost();
+		
+	}
 	include 'admin/admin.phtml';
 }

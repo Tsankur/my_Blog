@@ -29,17 +29,17 @@ $postsPerPage = (int)$options->get('posts_per_page');
 $postManager = new Model_PostManager($postsPerPage);
 if(isset($_GET['id']))
 {
-	$posts = $postManager->loadPost($_GET['id']);
+	$postManager->loadPost($_GET['id']);
 }
 else
 {
 	if(isset($_GET['page']))
 	{
-		$posts = $postManager->loadPage($_GET['page']);
+		$postManager->loadPage($_GET['page']);
 	}
 	else
 	{
-		$posts = $postManager->loadPage(0);
+		$postManager->loadPage(0);
 	}	
 }
 //loggin header

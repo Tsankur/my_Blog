@@ -11,7 +11,7 @@
 	</header>
 	<div class="base main">
 		<form method="POST" action="login.php">
-			<?=$error?>
+			<?= $error?>
 			<fieldset>
 				<legend>Login infos</legend>
 				<div>
@@ -26,7 +26,7 @@
 				<button id='envoyer'>Envoyer</button>
 			</fieldset>
 		</form>
-		<a href="<?=$referer ?>">Retour</a>
+		<a href="<?= isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $referer ?>">Retour</a>
 	</div>
 </body>
 </html>
