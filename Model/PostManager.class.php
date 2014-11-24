@@ -63,7 +63,7 @@ class Model_PostManager
 			}
 			else
 			{
-				$linksString .= '<a href="index.php?page=0" ">« Précédent</a>';
+				$linksString .= '<a href="index.php?page='.($this->currentPage-1).'" ">« Précédent</a>';
 			}
 			for ($i=0; $i < $this->pageCount; $i++)
 			{
@@ -87,5 +87,29 @@ class Model_PostManager
 			$linksString .='</nav>';
 		}
 		return $linksString;
+	}
+	function UpdatePost($id, $title, $content)
+	{
+		$this->db->query('UPDATE posts SET title = ?, content = ? WHERE id = ?', array($title, $content, $id));
+	}
+	function AddPost($title, $content, $userID)
+	{
+		return $this->db->execute('INSERT INTO posts (title, content, user_id) VALUES (?, ?, ?)', array($title, $content, $userID));
+	}
+	function getPosts()
+	{
+		return $this->db->query('SELECT posts.id, posts.title, posts.date, users.pseudo FROM posts INNER JOIN users ON posts.user_id = users.user_id ORDER BY id DESC');
+	}
+	function deletePost($id)
+	{
+		$this->db->execute('DELETE FROM posts WHERE id = ?', array($id));
+	}
+	function getCommentCount($id)
+	{
+		return $this->db->queryOne('SELECT count(*) as commentCount FROM comments WHERE post_id = ?', array($id));
+	}
+	function getComments($id)
+	{
+		return $this->db->query('SELECT comments.*, users.pseudo FROM comments INNER JOIN users ON comments.user_id = users.user_id WHERE post_id = ? ORDER BY id DESC', array($id));
 	}
 }

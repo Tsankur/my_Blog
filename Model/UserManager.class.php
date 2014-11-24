@@ -8,7 +8,7 @@ class Model_UserManager
 	}
 	function LogUser($username, $password)
 	{
-		$user = $this->db->queryOne('SELECT pseudo, isAdmin FROM users WHERE user_name = ? AND user_password = ?', array($username, md5($password)));
+		$user = $this->db->queryOne('SELECT user_id, pseudo, isAdmin FROM users WHERE user_name = ? AND user_password = ?', array($username, md5($password)));
 		
 		return $user;
 	}
@@ -21,5 +21,9 @@ class Model_UserManager
 	function RegisterUser($username, $password, $pseudo, $email)
 	{
 		return $this->db->execute('INSERT INTO users (user_name, user_password, pseudo, email) VALUES (?, ?, ?, ?)', array($username, md5($password), $pseudo, $email));
+	}
+	function GetUsers()
+	{
+		return $this->db->query('SELECT user_name, pseudo, email, isAdmin, user_id FROM users');
 	}
 }

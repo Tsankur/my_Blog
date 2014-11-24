@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr_FR">
+<head>
+	<meta charset="UTF-8">
+	<title>Blog</title>
+	<link rel="stylesheet" href=<?="'content/templates/$templateName/style.css'";?>/>
+</head>
+<body>
+	<header class="base">
+		<div>
+			<h1><?= $options->get('blog_name') ?></h1>
+			<div>
+				<?=$loginString; ?>
+				<nav>
+					<ul>
+						<li><a href="index.php">Accueil</a></li>
+						<li><a href="admin.php">Admin</a></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</header>

@@ -1,27 +1,5 @@
 <?php
-function my_autoload($class)
-{
-	// dossier courant;
-	$filePath = str_replace('_', '/', $class).'.class.php';
-	if (file_exists($filePath)) 
-	{
-		require_once($filePath);
-	}
-	else
-	{
-		// dossier parent;
-		$filePath = '../'.$filePath;
-		if (file_exists($filePath)) 
-		{
-			require_once($filePath);
-		}
-		else
-		{
-			error_log('Class "'.$class.'" could not be autoloaded');
-		}
-	}
-}
-spl_autoload_register("my_autoload");
+require_once 'bootstrap.php';
 
 session_start();
 $error = '';
@@ -33,6 +11,7 @@ if(isset($_POST['username']) && isset($_POST['password']))
 		$user = $userManager->LogUser($_POST['username'], $_POST['password']);
 		if($user)
 		{
+			$_SESSION['user_id'] = $user['user_id'];
 			$_SESSION['pseudo'] = $user['pseudo'];
 			if($user['isAdmin'] == '1')
 			{

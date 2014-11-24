@@ -7,25 +7,97 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="ext/tinymce/tinymce.min.js"></script>
 	<script>
+		var postId = <?= $postId; ?>;
 		function ShowPanel(panelName)
 		{
 			$("div.main>div>section").removeClass("show");
 			$("aside>ul>li").removeClass("panelSelected");
 			$("#"+panelName).addClass("show");
 		}
+		function editPost()
+		{
+			postId = $(this).attr('data');
+			$.ajax('getPost.php?id='+postId).done(function(result){
+				$('#title').val(result['title']);
+				tinyMCE.activeEditor.setContent(result['content']);
+				$("#postSectionTitle").html("Edit Post #"+postId);
+			});
+		}
+		function deletePost()
+		{
+			postId = $(this).attr('data');
+			$.ajax('deletePost.php?id='+postId).done(function(result){
+				$("tr[data_id="+result+"]").remove();
+			});
+		}
 		$(function(){
+			//menu
 			$("aside>ul>li").on("click", function(e){
 				var panelName = $(this).html();
 				ShowPanel(panelName);
 				$(this).addClass("panelSelected");
 			});
+
+			//posts
+			$("#submitPost").on("click", function(e)
+			{
+				if(postId > 0)
+				{
+					var title = $('#title').val();
+					var content = tinyMCE.activeEditor.getContent();
+					$("tr[data_id="+postId+"]>td:nth-child(2)").html(title);
+					console.log('update');
+					$.ajax('sendPost.php?id=' + postId, {method: 'post', data: {'title': title, 'content':  content}}).done(function(result){
+						alert(result);
+					});
+				}
+				else
+				{
+					var title = $('#title').val();
+					var content = tinyMCE.activeEditor.getContent();
+					console.log('add');
+					$.ajax('sendPost.php', {method: 'post', data: {'title': title, 'content':  content}}).done(function(result){
+						alert(result['message']);
+						$("#postSectionTitle").html("Edit Post #"+result['postID']);
+						$.ajax('getPost.php?id='+result['postID']).done(function(result){
+							$("#postsTable>tbody").prepend('<tr data_id="'+result['id']+'"><td>'+result['id']+'</td><td>'+result['title']+'</td><td>'+result['pseudo']+'</td><td>'+result['date']+'</td><td><button class="edit" type="button" data="'+result['id']+'">Edit</button></td><td><button class="delete" type="button" data="'+result['id']+'">X</button></td></tr>');
+							$("button.edit[data="+result['id']+"]").on("click", editPost);
+							$("button.delete[data="+result['id']+"]").on("click", deletePost);
+						});
+					});
+				}
+			});
+			$("button.edit").on("click", editPost);
+			$("button.delete").on("click", deletePost);
+			$("#newPost").on("click", function(e)
+			{
+				postId = 0;
+				tinyMCE.activeEditor.setContent('');
+				$("#postSectionTitle").html("New Post");
+				$('#title').val('');
+			});
+			if(postId > 0)
+			{
+				$("#postSectionTitle").html("Edit Post #"+postId);
+			}
+			else
+			{
+				$("#postSectionTitle").html("New Post");
+			}
+			//templates
+			$(".template").on("click", function(e){
+				$(".template").removeClass("selected");
+				$(this).addClass("selected");
+				$.ajax('changeTemplate.php?templateName='+$("p:first-child", $(this)).html()).done(function(result){
+				});
+			});
 		});
 		tinymce.init({
 			selector:'#tinyMCE',
 			plugins: [
-					"advlist autolink autosave link image lists charmap preview hr anchor pagebreak",
-					"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime nonbreaking",
-					"table contextmenu directionality emoticons template textcolor paste fullpage textcolor colorpicker textpattern"
+				"advlist autolink autosave link image lists charmap preview hr anchor pagebreak",
+				"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime nonbreaking",
+				"table contextmenu directionality emoticons template textcolor paste textcolor colorpicker textpattern"
 			],
 
 			toolbar1: "newdocument | cut copy paste searchreplace | undo redo | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | link unlink anchor image code",
@@ -37,7 +109,12 @@
 
 			min_height : 200,
 			max_height : 500,
-			height : 200
+			height : 200,
+			setup : function(ed) {
+				ed.on('init', function(ed) {
+					tinyMCE.activeEditor.setContent($("#tinyMCE").val());
+				});
+			}
 		});
 	</script>
 </head>
@@ -45,7 +122,14 @@
 	<header class="base">
 		<div>
 			<h1>Admin Panel</h1>
-			<?=$loginString; ?>
+			<div>
+				<?=$loginString; ?>
+				<nav>
+					<ul>
+						<li><a href="index.php">Accueil</a></li>
+					</ul>
+				</nav>
+			</div>
 		</div>
 	</header>
 	<div class="main base flex">
@@ -54,20 +138,22 @@
 				<li class="panelSelected">Posts</li>
 				<li>Images</li>
 				<li>Users</li>
+				<li>Templates</li>
 			</ul>
 		</aside>
 		<div>
 			<section class="show" id="Posts">
-				<form action="sendPost">
+				<h3 id="postSectionTitle">Edit posts </h3>
+				<form>
 					<fieldset>
 						<legend>Contenu</legend>
 						<div>
 							<label for="title">Titre : </label>
-							<input type="text" name="title" value=<?= isset($post)?$post['title']:'' ?>>
+							<input id="title" type="text" name="title" value=<?= isset($post)?$post['title']:'' ?>>
 						</div>
 						<div>
 							<label for="content">Contenu : </label>
-							<textarea name="content" id="tinyMCE"><?= isset($post)?$post['content']:'' ?></textarea>
+							<textarea name="content" id="tinyMCE"><?= isset($post)?$post["content"]:""; ?></textarea>
 						</div>
 					</fieldset>
 					<fieldset>
@@ -76,14 +162,42 @@
 							<?= $imagesString ?>
 						</div>
 					</fieldset>
-					<button type="submit">Envoyer</button>
+					<button id="submitPost" type="button">Envoyer</button>
+					<button id="newPost" type="button">Nouveau</button>
+				
 				</form>
+				<h3>Posts</h3>
+				<table id="postsTable" border="1">
+					<thead>
+						<th>Id</th>
+						<th>Title</th>
+						<th>Pseudo</th>
+						<th>Date</th>
+						<th>Edit</th>
+						<th>Delete</th>
+					</thead>
+					<?= $postsString ?>
+				</table>
 			</section>
 			<section id="Images">
+				<h3>Images</h3>
 				<?= $imagesString ?>
 			</section>
 			<section id="Users">
-				
+				<h3>Users</h3>
+				<table border="1">
+					<thead>
+						<th>Usermame</th>
+						<th>Pseudo</th>
+						<th>Email</th>
+						<th>Admin</th>
+					</thead>
+					<?= $usersString ?>
+				</table>
+			</section>
+			<section id="Templates">
+				<h3>Templates</h3>
+				<?= $templatesString ?>
 			</section>
 		</div>
 	</div>

@@ -20,22 +20,12 @@
 								<div>
 									<?php if(!$postManager->isOnePost()): ?>
 									<a href=<?= '"index.php?id='.$post['id'].'"'; ?>>Read More</a>
-									<a href=<?= '"index.php?id='.$post['id'].'"'; ?>><?=$postManager->getCommentCount($post['id'])['commentCount'];?> Comment(s)</a>
+									<a href=<?= '"index.php?id='.$post['id'].'"'; ?>><?='0'?></a>
 									<?php endif ?>
 								</div>
 							</footer>
-							<?php if($postManager->isOnePost()): ?>
-							<p>Comments :</p>
-							<div class="comments">
-								<?php foreach($postManager->getComments($post['id']) as $comment):?>
-								<div class="comment">
-									<p>Posted by <?= $comment['pseudo'];?> on <?= $comment['date']; ?></p>
-									<div class="clearfix"><?= $comment['content']; ?></div>
-								</div>
-								<?php endforeach; ?>
-							</div>
-							<?php endif;?>
 						</article>
+						<!--<?php/* comments_template(); */?>-->
 					<?php endwhile ?>
 					<?= $postManager->getPagedLinks();?>
 				<?php else:?>
