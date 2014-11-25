@@ -18,22 +18,29 @@
 							<footer>
 								<p class="tags">Tags : <?php /*the_tags('');*/ ?></p>
 								<div>
+									<?php if(isset($_SESSION["isAdmin"])): ?>
+										<a href=<?= '"admin.php?id='.$post['id'].'"'; ?>>Edit</a>
+									<?php endif;?>
 									<?php if(!$postManager->isOnePost()): ?>
-									<a href=<?= '"index.php?id='.$post['id'].'"'; ?>>Read More</a>
-									<a href=<?= '"index.php?id='.$post['id'].'"'; ?>><?=$postManager->getCommentCount($post['id'])['commentCount'];?> Comment(s)</a>
+										<a href=<?= '"index.php?id='.$post['id'].'"'; ?>>Read More</a>
+										<a href=<?= '"index.php?id='.$post['id'].'"'; ?>><?=$commentManager->getCommentCount($post['id'])['commentCount'];?> Comment(s)</a>
 									<?php endif ?>
 								</div>
 							</footer>
 							<?php if($postManager->isOnePost()): ?>
-							<p>Comments :</p>
-							<div class="comments">
-								<?php foreach($postManager->getComments($post['id']) as $comment):?>
-								<div class="comment">
-									<p>Posted by <?= $comment['pseudo'];?> on <?= $comment['date']; ?></p>
-									<div class="clearfix"><?= $comment['content']; ?></div>
+								<p>Comments :</p>
+								<div class="comments">
 								</div>
-								<?php endforeach; ?>
-							</div>
+								<button id="updateComments" type="button">Update Comments</button>
+								<?php if(isset($_SESSION['pseudo'])): ?>
+									<form>
+										<fieldset>
+											<legend>Nouveau commentaire</legend>
+											<textarea name="commentContent" id="commentContent"></textarea>
+											<button id="sendComment" type="button">Envoyer</button>
+										</fieldset>
+									</form>
+								<?php endif;?>
 							<?php endif;?>
 						</article>
 					<?php endwhile ?>
@@ -41,8 +48,45 @@
 				<?php else:?>
 					<strong>Désole il n'y a pas d'article correspondant</strong>
 				<?php endif;?>
-
 			</section>
-
 		</div>
 	</div>
+	<?php if($postManager->isOnePost()): ?>
+		<script type="text/javascript">
+		var lastCommentID = <?= isset($lastCommentId)?$lastCommentId:0 ?>;
+		function getLastComments()
+		{
+			$.ajax("getLastComments.php", {method:'post', data:{'id': <?= $_GET['id']?>, 'last_id': lastCommentID}}).done(function(result){
+				var element = $(".comments")
+				for (var i = 0; i < result.length; i++)
+				{
+					element.append('<div class="comment clearfix" data="'+result[i]['id']+'"><p>'+result[i]['content']+'</p><footer><p>Posted by '+result[i]['pseudo']+' on '+result[i]['date']+'</p><?php if(isset($_SESSION["isAdmin"])): ?><button class="deleteComment" data="'+result[i]['id']+'">X</button><?php endif;?></footer></div>');
+
+					lastCommentID = result[i]['id'];
+					<?php if(isset($_SESSION['isAdmin'])): ?>
+						$(".deleteComment", element).on("click", function(){
+							$.ajax("deleteComment.php?id="+$(this).attr('data')).done(function(result){
+								$(".comment[data="+result+"]").remove();
+								getLastComments();
+							});
+						});
+					<?php endif; ?>
+				}
+			});
+		}
+		$(function(){
+			<?php if(isset($_SESSION['pseudo'])): ?>
+				$("#sendComment").on("click", function(){
+					$.ajax("sendComment.php", {method:'post', data:{'id': <?= $_GET['id']?>, 'content':$("#commentContent").val()}}).done(function(result){
+						$("#commentContent").val('');
+						getLastComments();
+					});
+				});
+			<?php endif; ?>
+			$("#updateComments").on("click", function(){
+				getLastComments();
+			});
+			getLastComments();
+		});
+		</script>
+	<?php endif; ?>

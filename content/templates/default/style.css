@@ -526,6 +526,10 @@ div.main>div>section
 	background-color: white;
 	padding: 10px;
 }
+div.main>div>section>h2
+{
+	margin: 0 0 5px;
+}
 div.main>div>section>article
 {
 	border: 1px #CED1DA solid;
@@ -534,7 +538,7 @@ div.main>div>section>article
 }
 div.main>div>section>article>h3
 {
-	margin-top: 0;
+	margin: 0;
 }
 div.main>div>section>article>h3>a
 {
@@ -584,7 +588,7 @@ div.main>div>section>article>footer>div>a
 	background-color: #4EABD7;
 	font-size: 1.1em;
 	color: white;
-	line-height: 4rem;
+	line-height: 2em;
 	font-weight: bold;
 	padding-left: 1em;
 	padding-right: 1em;
@@ -602,12 +606,51 @@ div.main>div>section>article>div.comments
 	background-color: white;
 	border: 1px #CED1DA solid;
 	padding: 10px;
+	margin-bottom: 10px;
 }
-div.main>div>section>article>div.comments>.comment
+div.main>div>section>article>div.comments>.comment+.comment
 {
 	border-radius: 0;
 	border-top: 1px dotted black;
+	padding-top: 10px;
+}
+div.main>div>section>article>div.comments>.comment>footer
+{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+div.main>div>section>article>div.comments>.comment>footer>p
+{
+	font-size: 1rem;
+}
+div.main>div>section>article>div.comments>.comment>:first-child
+{
+	width: 100%;
+	margin-top: 0;
+}
+div.main>div>section>article>button
+{
+	font-size: 1.2rem;
+}
+div.main>div>section>article>form>fieldset
+{
+	font-size: 1.2rem;
+	background-color: #EEF0F5;
+	padding: 10px;
 	margin-top: 10px;
+}
+div.main>div>section>article>form>fieldset>textarea
+{
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+	width: 100%;
+	resize: vertical;
+	height: 4em;
+	min-height: 4em;
+	max-height: 8em;
+	margin-bottom: 1em;
 }
 
 div.main>div>section>nav

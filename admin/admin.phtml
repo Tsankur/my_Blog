@@ -8,6 +8,7 @@
 	<script src="ext/tinymce/tinymce.min.js"></script>
 	<script>
 		var postId = <?= $postId; ?>;
+		var files;
 		function ShowPanel(panelName)
 		{
 			$("div.main>div>section").removeClass("show");
@@ -25,9 +26,13 @@
 		}
 		function deletePost()
 		{
-			postId = $(this).attr('data');
-			$.ajax('deletePost.php?id='+postId).done(function(result){
+			$.ajax('deletePost.php?id='+$(this).attr('data')).done(function(result){
 				$("tr[data_id="+result+"]").remove();
+				if(postId == result)
+				{
+					$("#newPostForm")[0].reset();
+					$("#postSectionTitle").html("New Post");
+				}
 			});
 		}
 		$(function(){
@@ -91,6 +96,44 @@
 				$.ajax('changeTemplate.php?templateName='+$("p:first-child", $(this)).html()).done(function(result){
 				});
 			});
+			//images 
+
+			// Grab the files and set them to our variable
+			function prepareUpload(event)
+			{
+				files = event.target.files;
+			} 
+			$('input[type=file]').on('change', prepareUpload);
+			 
+			$("#uploadImageForm").submit(function(event) {
+
+				//disable the default form submission
+				event.preventDefault();
+				//grab all form data
+				var data = new FormData();
+				data.append('file', files[0]);
+				$("#uploadButton").html("Uploading...");
+				$("#uploadButton").attr("disabled", "");
+				$.ajax('uploadImage.php', {
+					type: 'POST',
+					data: data,
+					cache: false,
+					dataType: 'json',
+					processData: false,
+					contentType: false
+				}).done(function(result){
+					console.log("lol");
+					if(result !== 'error')
+					{
+						$("#uploadButton").html("Envoyer");
+						$("#uploadButton").removeAttr("disabled");
+						$("imageSelect").append('<img src="content/images/'+result+'"/>');
+						$("#addProductForm")[0].reset();
+					}
+				}).error(function(result){
+					console.log(result);
+				});
+			});
 		});
 		tinymce.init({
 			selector:'#tinyMCE',
@@ -144,7 +187,7 @@
 		<div>
 			<section class="show" id="Posts">
 				<h3 id="postSectionTitle">Edit posts </h3>
-				<form>
+				<form id="newPostForm">
 					<fieldset>
 						<legend>Contenu</legend>
 						<div>
@@ -156,16 +199,21 @@
 							<textarea name="content" id="tinyMCE"><?= isset($post)?$post["content"]:""; ?></textarea>
 						</div>
 					</fieldset>
-					<fieldset>
-						<legend>Image</legend>
-						<div class="imageSelect">
-							<?= $imagesString ?>
-						</div>
-					</fieldset>
 					<button id="submitPost" type="button">Envoyer</button>
 					<button id="newPost" type="button">Nouveau</button>
-				
 				</form>
+				<h3>Images</h3>
+				<div>
+					<div class="imageSelect">
+						<?= $imagesString ?>
+					</div>
+					<hr>
+					<form id="uploadImageForm" enctype="multipart/form-data" action="javascript:;" method="POST">
+						<label for="file">Selectionner une image</label>
+						<input type="file" accept=".png,.jpg,.gif" name="file">
+						<button id="uploadButton" type="submit">Envoyer</button>
+					</form>
+				</div>
 				<h3>Posts</h3>
 				<table id="postsTable" border="1">
 					<thead>

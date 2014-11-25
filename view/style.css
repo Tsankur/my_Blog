@@ -602,19 +602,18 @@ div.main>div>section.show
 {
 	display: flex;
 	align-items: center;
+	flex-direction: row;
+	flex-wrap: wrap;
+	height: 200px;
+	overflow-x: hidden;
+	overflow-y: scroll;
 }
 .imageSelect>img
 {
-	width: 144px;
+	width: 140px;
 	margin-right: 5px;
 	line-height: 0;
 	margin-bottom: 5px;
-}
-.imageSelect
-{
-	flex-direction: row;
-	flex-wrap: wrap;
-	align-items: flex-start;
 }
 #Posts
 {

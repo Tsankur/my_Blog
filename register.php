@@ -10,8 +10,9 @@ if(isset($_POST['username']) && isset($_POST['password']) && isset($_POST['pseud
 		$userManager = new Model_UserManager();
 		if($userManager->userExist($_POST['username'], $_POST['pseudo']) == null)
 		{
-			$userManager->RegisterUser($_POST['username'], $_POST['password'], $_POST['pseudo'], $_POST['email']);
+			$id = $userManager->RegisterUser($_POST['username'], $_POST['password'], $_POST['pseudo'], $_POST['email']);
 		
+			$_SESSION['user_id'] = $id;
 			$_SESSION['pseudo'] = $_POST['pseudo'];
 			header('Location:'.$_POST['referer']);
 		}

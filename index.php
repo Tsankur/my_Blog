@@ -6,6 +6,7 @@ $options = new Model_BlogOptions();
 $templateName = $options->get('current_template');
 $postsPerPage = (int)$options->get('posts_per_page');
 $postManager = new Model_PostManager($postsPerPage);
+$commentManager = new Model_CommentManager();
 if(isset($_GET['id']))
 {
 	$postManager->loadPost($_GET['id']);

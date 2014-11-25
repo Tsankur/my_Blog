@@ -8,7 +8,6 @@ class Model_PostManager
 	private $pageCount;
 	private $currentPage;
 	private $onePost;
-	private $commentCount;
 	function __construct($postsPerPage)
 	{
 		$this->onePost = false;
@@ -104,12 +103,8 @@ class Model_PostManager
 	{
 		$this->db->execute('DELETE FROM posts WHERE id = ?', array($id));
 	}
-	function getCommentCount($id)
+	function getTags($id)
 	{
-		return $this->db->queryOne('SELECT count(*) as commentCount FROM comments WHERE post_id = ?', array($id));
-	}
-	function getComments($id)
-	{
-		return $this->db->query('SELECT comments.*, users.pseudo FROM comments INNER JOIN users ON comments.user_id = users.user_id WHERE post_id = ? ORDER BY id DESC', array($id));
+		return $this->db->query('SELECT tags.* FROM tags INNER JOIN tagsLink ON posts.post_id = tags.id WHERE post_id = ? ORDER BY id', array($id));
 	}
 }
