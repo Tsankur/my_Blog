@@ -11,6 +11,6 @@ if(isset($_SESSION['isAdmin']))
 		$postsPerPage = (int)$options->get('posts_per_page');
 		$postManager = new Model_PostManager($postsPerPage);
 		$postManager->deletePost($_GET['id']);
-		echo $_GET['id'];
+		echo json_encode($_GET['id']);
 	}
 }

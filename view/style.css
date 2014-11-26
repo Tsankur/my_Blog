@@ -588,11 +588,13 @@ div.main>div>section.show
 	display: flex;
 	flex-wrap: wrap;
 }
-#Images
+#Images>div
 {
+	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 }
-#Images>img
+#Images>div>img
 {
 	width: 188px;
 	margin-right: 5px;
@@ -636,6 +638,15 @@ div.main>div>section>table
 div.main>div>section#Posts>table
 {
 	text-align: center;
+}
+div.main>div>section#Posts>div>a.tag
+{
+	color: blue;
+}
+div.main>div>section#Posts>div>a.tag:hover
+{
+	cursor: pointer;
+	text-decoration: underline;
 }
 div.main>div>section>table>tbody>tr>td,
 div.main>div>section>table>thead>tr>th

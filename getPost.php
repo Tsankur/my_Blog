@@ -17,15 +17,15 @@ if(isset($_SESSION['isAdmin']))
 		}
 		else
 		{
-			echo '';
+			echo json_encode('');
 		}
 	}
 	else
 	{
-		echo '';
+		echo json_encode('');
 	}
 }
 else
 {
-	echo '';
+	echo json_encode('');
 }

@@ -7,8 +7,8 @@ if(isset($_SESSION['isAdmin']))
 {
 	if(isset($_GET['id']))
 	{
-		$commentManager = new Model_CommentManager();
-		$commentManager->deleteComment($_GET['id']);
-		echo json_encode($_GET['id']);
+		$tagManager = new Model_TagManager();
+		$result = $tagManager->getTags($_GET['id']);
+		echo json_encode($result);
 	}
 }

@@ -50,18 +50,21 @@ else
 	
 	if(isset($_GET['id']))
 	{
-		$postManager->loadPost($_GET['id']);
-		if($postManager->havePosts())
-		{
-			$post = $postManager->getNextPost();
-			$postId = $_GET['id'];
-		}
+		$postId = $_GET['id'];
 	}
 	$posts = $postManager->getPosts();
 	$postsString = '';
 	for ($i=0; $i < count($posts); $i++)
 	{
 		$postsString .= '<tr data_id="'.$posts[$i]['id'].'"><td>'.$posts[$i]['id'].'</td><td>'.$posts[$i]['title'].'</td><td>'.$posts[$i]['pseudo'].'</td><td>'.$posts[$i]['date'].'</td><td><button class="edit" type="button" data="'.$posts[$i]['id'].'">Edit</button></td><td><button class="delete" type="button" data="'.$posts[$i]['id'].'">X</button></td></tr>';
+	}
+	//tags
+	$tagManager = new Model_TagManager();
+	$tags = $tagManager->GetTags();
+	$tagsString = '';
+	for ($i=0; $i < count($tags); $i++)
+	{
+		$tagsString .= '<a class="tag">'.$tags[$i]['name'].' </a>';
 	}
 
 	include 'admin/admin.phtml';

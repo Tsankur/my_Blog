@@ -16,7 +16,11 @@
 							<p>Posted by <?= $post['pseudo'];?> in: <?php /*$post['category'];*/ ?> on <?= $post['date']; ?></p>
 							<div class="clearfix"><?= $post['content']; ?></div>
 							<footer>
-								<p class="tags">Tags : <?php /*the_tags('');*/ ?></p>
+								<p class="tags">Tags : 
+									<?php foreach ($tagManager->getTags($post['id']) as $tag) :?>
+										<a href="index.php?tag=<?= $tag['name']; ?>"><?= $tag['name']; ?></a> 
+									<?php endforeach?>
+								</p>
 								<div>
 									<?php if(isset($_SESSION["isAdmin"])): ?>
 										<a href=<?= '"admin.php?id='.$post['id'].'"'; ?>>Edit</a>

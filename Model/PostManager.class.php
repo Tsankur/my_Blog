@@ -13,19 +13,27 @@ class Model_PostManager
 		$this->onePost = false;
 		$this->postsPerPage = $postsPerPage;
 		$this->db = new Helper_Database('config.ini');
-		$postCount = $this->db->queryOne('SELECT count(*) FROM posts');
-		$this->pageCount = (int)$postCount['count(*)'] / $postsPerPage;
 	}
 	function loadPost($id)
 	{
 		$this->posts = $this->db->query('SELECT posts.*, users.pseudo FROM posts INNER JOIN users ON posts.user_id = users.user_id WHERE posts.id = ?',array($id));
 		$this->onePost = true;
 	}
-	function loadPage($id)
+	function loadPosts($page, $tag_name = null)
 	{
-		$this->posts = $this->db->query('SELECT posts.*, users.pseudo FROM posts INNER JOIN users ON posts.user_id = users.user_id ORDER BY posts.id DESC LIMIT '.((int)$id*$this->postsPerPage).', '.$this->postsPerPage);
+		if($tag_name)
+		{
+			$this->posts = $this->db->query('SELECT posts.*, users.pseudo FROM tags LEFT JOIN tags_relationship ON tags_relationship.tag_id = tags.id LEFT JOIN posts ON tags_relationship.post_id = posts.id LEFT JOIN users ON posts.user_id = users.user_id WHERE tags.name = ? ORDER BY posts.id DESC LIMIT '.((int)$page*$this->postsPerPage).', '.$this->postsPerPage,array($tag_name));
+			$PostCount = $this->db->queryOne('SELECT count(posts.id) as postCount FROM tags LEFT JOIN tags_relationship ON tags_relationship.tag_id = tags.id LEFT JOIN posts ON tags_relationship.post_id = posts.id WHERE tags.name = ?',array($tag_name));
+		}
+		else
+		{
+			$this->posts = $this->db->query('SELECT posts.*, users.pseudo FROM posts INNER JOIN users ON posts.user_id = users.user_id ORDER BY posts.id DESC LIMIT '.((int)$page*$this->postsPerPage).', '.$this->postsPerPage);
+			$PostCount = $this->db->queryOne('SELECT count(posts.id) as postCount FROM posts');
+		}
 		$this->onePost = false;
-		$this->currentPage = $id;
+		$this->currentPage = $page;
+		$this->pageCount = (int)$PostCount['postCount'] / $this->postsPerPage;
 	}
 	function havePosts()
 	{
@@ -37,10 +45,11 @@ class Model_PostManager
 		if(!$this->onePost)
 		{
 			$content = $post['content'];
-			if(strlen($content) > 500)
+			$cutPos = strpos($content, '<!-- pagebreak -->');
+			if($cutPos)
 			{
-				$content = substr($content, 0, 500);
-				$content .= ' ... <a href="index.php?id='.$post['id'].'">Read more.</a>';
+				$content = substr($content, 0, $cutPos + 23);
+				$content = str_replace('<!-- pagebreak -->', ' ... <a href="index.php?id='.$post['id'].'">Read more.</a>', $content);
 				$post['content'] = $content;
 			}
 		}

@@ -15,7 +15,7 @@ if(isset($_SESSION['isAdmin']))
 		if(isset($_GET['id']))
 		{
 			$postManager->UpdatePost($_GET['id'], $_POST['title'], $_POST['content']);
-			echo 'Post modifié';
+			echo json_encode('Post modifié');
 		}
 		else
 		{
@@ -26,6 +26,6 @@ if(isset($_SESSION['isAdmin']))
 	}
 	else
 	{
-		echo 'Titre manquant';
+		echo json_encode('Titre manquant');
 	}
 }
