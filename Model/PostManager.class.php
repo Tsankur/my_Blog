@@ -42,17 +42,20 @@ class Model_PostManager
 	function getNextPost()
 	{
 		$post = array_shift($this->posts);
+		$content = $post['content'];
+		$content = str_replace('__IMAGES__', "content/images", $content);
+		
 		if(!$this->onePost)
 		{
-			$content = $post['content'];
 			$cutPos = strpos($content, '<!-- pagebreak -->');
 			if($cutPos)
 			{
 				$content = substr($content, 0, $cutPos + 23);
 				$content = str_replace('<!-- pagebreak -->', ' ... <a href="index.php?id='.$post['id'].'">Read more.</a>', $content);
-				$post['content'] = $content;
+				
 			}
 		}
+		$post['content'] = $content;
 		return $post;
 	}
 	function isOnePost()

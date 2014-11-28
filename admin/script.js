@@ -12,7 +12,11 @@ function editPost()
 {
 	$.ajax('getPost.php?id='+postId).done(function(result){
 		$('#title').val(result['title']);
-		tinyMCE.activeEditor.setContent(result['content']);
+		var content = result['content'];
+
+		content = content.replace('__IMAGES__', "content/images");
+
+		tinyMCE.activeEditor.setContent(content);
 		$("#postSectionTitle").html("Edit Post #"+postId);
 
 		currentPostTags = new Array();
@@ -126,13 +130,14 @@ $(function(){
 		{
 			var title = $('#title').val();
 			var content = tinyMCE.activeEditor.getContent();
+			content = content.replace("content/images", '__IMAGES__');
 			$("tr[data_id="+postId+"]>td:nth-child(2)").html(title);
 			console.log('update');
 			$.ajax('sendPost.php?id=' + postId, {method: 'post', data: {'title': title, 'content':  content}}).done(function(result){
 				console.log('update tags');
-				var tags = new Array();
-				tags['toAdd'] = new Array();
-				tags['toDelete'] = new Array();
+				var tags = new Object();
+				tags.toAdd = new Array();
+				tags.toDelete = new Array();
 				for(var i = 0; i < newPostTags.length; i++)
 				{
 					if(currentPostTags.indexOf(newPostTags[i])<0)
@@ -147,7 +152,7 @@ $(function(){
 						tags.toDelete.push(currentPostTags[i]);
 					}
 				}
-				$.ajax('editTagRelationship.php?id=' + postId, {method: 'post', data: {'tags': tags}
+				$.ajax('editTagRelationship.php?id=' + postId, {method: 'post', data: {'tags': JSON.stringify(tags)}
 				});
 			});
 		}
@@ -155,6 +160,7 @@ $(function(){
 		{
 			var title = $('#title').val();
 			var content = tinyMCE.activeEditor.getContent();
+			content = content.replace("content/images", '__IMAGES__');
 			console.log('add');
 			$.ajax('sendPost.php', {method: 'post', data: {'title': title, 'content':  content}}).done(function(result){
 				alert(result['message']);
@@ -163,7 +169,7 @@ $(function(){
 					var tags = new Array();
 					tags['toAdd'] = new Array();
 					//newPostTags;
-					$.ajax('editTagRelationship.php?id='+result['postID'], {method: 'POST', data: {'tags': tags}});
+					$.ajax('editTagRelationship.php?id='+result['postID'], {method: 'POST', data: {'tags': JSON.stringify(tags)}});
 					$("#postsTable>tbody").prepend('<tr data_id="'+result['id']+'"><td>'+result['id']+'</td><td>'+result['title']+'</td><td>'+result['pseudo']+'</td><td>'+result['date']+'</td><td><button class="edit" type="button" data="'+result['id']+'">Edit</button></td><td><button class="delete" type="button" data="'+result['id']+'">X</button></td></tr>');
 					$("button.edit[data="+result['id']+"]").on("click", editPost);
 					$("button.delete[data="+result['id']+"]").on("click", deletePost);

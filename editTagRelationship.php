@@ -8,16 +8,17 @@ if(isset($_SESSION['isAdmin']))
 	if(isset($_POST['tags']) && isset($_GET['id']))
 	{
 		$tagManager = new Model_TagManager();
-		if(array_key_exists('toAdd', $_POST['tags']))
+		$tags = json_decode($_POST['tags']);
+		if(array_key_exists('toAdd', $tags))
 		{
-			foreach ($_POST['tags']['toAdd'] as $value) {
+			foreach ($tags->toAdd as $value) {
 				$tagManager->addTagRelationship($value, $_GET['id']);
 			}
 		}
-		if(array_key_exists('toDelete', $_POST['tags']))
+		if(array_key_exists('toDelete', $tags))
 		{
-			foreach ($_POST['tags']['toDelete'] as $value) {
-				$tagManager->removeTagRelationship($value, $_GET['id']);
+			foreach ($tags->toDelete as $value) {
+				$tagManager->deleteTagRelationship($value, $_GET['id']);
 			}
 		}
 		echo json_encode('finished');
